@@ -1,0 +1,44 @@
+﻿@page
+@model Sql_Mando.Pages.MovieUpdateModel
+@{
+}
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="@Model.movie.titleType" class="form-control"></label>
+                <input asp-for="@Model.movie.titleType class=" form-control" />
+                <span asp-validation-for="@Model.movie.titleType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.movie.primaryTitle" class="form-control"></label>
+                <input asp-for="@Model.movie.primaryTitle" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.movie.originalTitle" class="form-control"></label>
+                <input asp-for="@Model.movie.originalTitle" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.movie.isAdult" class="form-control"></label>
+                <input asp-for="@Model.movie.isAdult"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.movie.StartYear" class="form-control"></label>
+                <input asp-for="@Model.movie.StartYear" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.movie.EndYear" class="form-control"></label>
+                <input asp-for="@Model.movie.EndYear" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.movie.RunTime" class="form-control"></label>
+                <input asp-for="@Model.movie.RunTime" class="form-control" />
+            </div>
+            <div class="form-group">
+                <a asp-page="MoviePage" class=" btn-btn-primary">Cancel</a>
+                <input type="submit" value="update movie" class="btn-btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>

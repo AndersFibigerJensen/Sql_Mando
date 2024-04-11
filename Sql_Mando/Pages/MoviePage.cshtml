@@ -1,0 +1,59 @@
+﻿@page
+@model Sql_Mando.Pages.MoviePageModel
+@{
+    <form method="get">
+        Search <input type="text" asp-for="FilterCriteria" />
+        <input type="submit" value="Filter" />
+    </form>
+
+    <a asp-page="MovieAdd"> add member </a>
+
+    <table class="table">
+        <thead>
+            <th>
+                name
+            </th>
+            <th>
+                type
+            </th>
+            <th>
+               startyear
+            </th>
+            <th>
+                endyear
+            </th>
+            <th>
+                runtime
+            </th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.movies)
+            {
+               <tr>
+                   <td>
+                    @item.primaryTitle
+                   </td>
+                   <td>
+                   @item.titleType
+                   </td>
+                   <td>
+                    @item.StartYear
+                   </td>
+                   <td>
+                        @item.EndYear
+                   </td>
+                  <td>
+                    @item.RunTime
+                  <td>
+                    @item.isAdult
+                  </td>
+                    <td>
+                      <a asp-page="MovieUpdate" asp-route-id="@item.tconst">update </a>
+                      <a asp-page="MovieDelete" asp-route-id="@item.tconst">delete</a>
+                    </td>
+
+               </tr>
+            }
+        </tbody>
+    </table>
+}

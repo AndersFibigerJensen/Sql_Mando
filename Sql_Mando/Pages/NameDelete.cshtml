@@ -1,0 +1,31 @@
+﻿@page
+@model Sql_Mando.Pages.NameDeleteModel
+@{
+}
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="@Model.name.nconst" class="form-control"></label>
+                <input asp-for="@Model.name.nconst" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.name.primaryName" class="form-control"></label>
+                <input asp-for="@Model.name.primaryName class=" form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.name.birthyear" class="form-control"></label>
+                <input asp-for="@Model.name.birthyear" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.name.deathyear" class="form-control"></label>
+                <input asp-for="@Model.name.deathyear" class="form-control" />
+            </div>
+            <div class="form-group">
+                <a asp-page="NamePage" class=" btn-btn-primary">Cancel</a>
+                <input type="submit" value="delete" class="btn-btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+﻿@page
+@model Sql_Mando.Pages.NamePageModel
+@{
+    <form method="get">
+        Search <input type="text" asp-for="FilterCriteria" />
+        <input type="submit" value="Filter" />
+    </form>
+
+    <table class="table">
+        <thead>
+        <th>
+            name
+        </th>
+        <th>
+            birthyear
+        </th>
+        <th>
+           deathyear
+        </th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.names)
+            {
+                <tr>
+                    <td>
+                        @item.primaryName
+                    </td>
+                    <td>
+                        @item.birthyear
+                    </td>
+                    <td>
+                        @item.deathyear
+                    </td>
+                    <td>
+                        <a asp-page="NameDelete" asp-route-id="@item.nconst"> delete</a>
+                        <a asp-page="NameUpdate" asp-route-id="@item.nconst">update</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
