@@ -6,6 +6,8 @@
         <input type="submit" value="Filter" />
     </form>
 
+    <a asp-page="NameAdd"> add name </a>
+
     <table class="table">
         <thead>
         <th>
@@ -34,6 +36,12 @@
                     <td>
                         <a asp-page="NameDelete" asp-route-id="@item.nconst"> delete</a>
                         <a asp-page="NameUpdate" asp-route-id="@item.nconst">update</a>
+                    </td>
+                    <td>
+                        <a asp-page="ProfessionPage" asp-route-proid="@item.nconst"> get professions</a>
+                    </td>
+                    <td>
+                        <a asp-page="KnownTitles" asp-route-proid="@item.nconst">get knowntitle </a>
                     </td>
                 </tr>
             }

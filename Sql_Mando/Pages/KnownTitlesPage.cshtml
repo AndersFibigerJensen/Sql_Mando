@@ -1,0 +1,28 @@
+﻿@page
+@model Sql_Mando.Pages.KnownTitlesPageModel
+@{
+}
+
+<a asp-page="AddKnownTitles"> add title </a>
+
+<table class="table">
+    <thead>
+    <th>
+        KnownTitle
+    </th>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Titles)
+        {
+            <tr>
+                <td>
+                    @item.knownTitle
+                </td>
+                <td>
+                    <a asp-page="UpdateTitles" asp-route-proid="@item.ID">update knowntitle </a>
+                    <a asp-page="DeleteTitle" asp-route-proid="@item.ID"> delete knowntitle </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

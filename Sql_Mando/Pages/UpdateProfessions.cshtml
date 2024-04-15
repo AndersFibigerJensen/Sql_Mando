@@ -1,0 +1,29 @@
+﻿@page
+@model Sql_Mando.Pages.UpdateProfessionsModel
+@{
+} 
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="@Model.Profession.ID" class="form-control"></label>
+                    <input readonly asp-for="@Model.Profession.ID" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Profession.nconst" class="form-control"></label>
+                    <input readonly asp-for="@Model.Profession.nconst" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Profession.profession" class="form-control"></label>
+                    <input asp-for="@Model.Profession.profession" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <a asp-page="MoviePage" class=" btn-btn-primary">Cancel</a>
+                    <input type="submit" value="Update Profession" class="btn-btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}

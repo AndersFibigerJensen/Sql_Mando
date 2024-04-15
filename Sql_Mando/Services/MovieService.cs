@@ -9,8 +9,8 @@ namespace Sql_Mando.Services
 {
     public class MovieService : ConnectionString, IMovieService
     {
-        string insertstring = $"EXEC ADDMovie @tconst=@ID,@titleType=@Type,@Name=@Title,@Origin=@OriginalTitle,@isAdult=@isAdult,@Start=@StartYear,@End=@EndYear,@Run=@Runtime";
-        string updatestring = $"EXEC altermovie @tconst=@ID,@titleType=@Type,@PrimaryTitle=@Title,@originalTitle=@Orgin,@isAdult=@isAdult,@StartYear=@Start=,@EndYear=@End,@Runtime=@Run";
+        string insertstring = $"EXEC ADDMovie @tconst=@id,@titleType=@Type,@Name=@Title,@Origin=@Original,@isAdult=@Adult,@Start=@StartYear,@End=@EndYear,@Run=@Runtime";
+        string updatestring = $"EXEC altermovie @tconst=@ID,@titleType=@Type,@PrimaryTitle=@Title,@originalTitle=@Orgin,@isAdult=@Adult,@StartYear=@Start,@EndYear=@End,@Runtime=@Run";
         string removestring = $"EXEC RemoveMovie @tconst=@ID";
         string searchstring = $"select * from SearchMovie(@name)";
         string findidmovie = $"select * from FindMovie(@ID)";
@@ -20,21 +20,25 @@ namespace Sql_Mando.Services
 
         }
 
+        public MovieService(string connection):base(connection)
+        {
+            
+        }
+
         public async Task InsertMovie(Movie movie)
         {
-            using (SqlConnection connection = new SqlConnection(Connection))
+            using (SqlConnection connection = new SqlConnection(_connection))
             {
-                SqlTransaction transaction = connection.BeginTransaction();
-                using (SqlCommand cmd = new SqlCommand(insertstring, connection, transaction))
+                using (SqlCommand cmd = new SqlCommand(insertstring, connection))
                 {
                     try
                     {
                         await connection.OpenAsync();
-                        if (FindMovieById(movie.tconst) != null)
-                            throw new Exception();
                         int normallength = "0000001".Length;
-                        if (movie.tconst.Length < normallength)
+                        if (movie.tconst.Length > normallength)
                         {
+                            if (FindMovieById(movie.tconst).Result != null)
+                                throw new Exception();
                             cmd.Parameters.AddWithValue("@id", movie.tconst);
                         }
                         else
@@ -44,15 +48,17 @@ namespace Sql_Mando.Services
                                 movie.tconst = "0" + movie.tconst;
                             }
                             movie.tconst = "tt" + movie.tconst;
+                            if (FindMovieById(movie.tconst).Result != null)
+                                throw new Exception();
                             cmd.Parameters.AddWithValue("@ID", movie.tconst);
                         }
                         cmd.Parameters.AddWithValue("@Type", movie.titleType);
                         cmd.Parameters.AddWithValue("@Title", movie.primaryTitle);
-                        cmd.Parameters.AddWithValue("@Orgin", movie.originalTitle);
-                        cmd.Parameters.AddWithValue("@isAdult", movie.isAdult);
-                        cmd.Parameters.AddWithValue("@Start", movie.StartYear);
-                        cmd.Parameters.AddWithValue("@End", movie.EndYear);
-                        cmd.Parameters.AddWithValue("@Run", movie.RunTime);
+                        cmd.Parameters.AddWithValue("@Original", movie.originalTitle);
+                        cmd.Parameters.AddWithValue("@Adult", movie.isAdult);
+                        cmd.Parameters.AddWithValue("@StartYear", movie.StartYear);
+                        cmd.Parameters.AddWithValue("@EndYear", movie.EndYear);
+                        cmd.Parameters.AddWithValue("@Runtime", movie.RunTime);
                         cmd.ExecuteNonQuery();
                         await connection.CloseAsync();
                     }
@@ -72,16 +78,16 @@ namespace Sql_Mando.Services
 
         public async Task<List<Movie>> FindMovie(string title)
         {
-            using (SqlConnection connection = new SqlConnection(Connection))
+            using (SqlConnection connection = new SqlConnection(_connection))
             {
                 using (SqlCommand cmd = new SqlCommand(searchstring, connection))
                 {
+                    List<Movie> movies = new List<Movie>();
                     try
                     {
                         await connection.OpenAsync();
                         cmd.Parameters.AddWithValue("@name", title);
                         SqlDataReader reader = await cmd.ExecuteReaderAsync();
-                        List<Movie> movies=new List<Movie>();
                         while(await reader.ReadAsync())
                         {
                             string idvalue = reader.GetString(0);
@@ -102,31 +108,29 @@ namespace Sql_Mando.Services
                     catch (SqlException)
                     {
                         Console.WriteLine(cmd.CommandText);
+                        return movies;
                     }
                     catch (Exception ex)
                     {
-
+                        return movies;
                     }
+                    
                 }
-                return null;
+
             }
         }
 
         public async Task DeleteMovie(string id)
         {
-            using (SqlConnection connection = new SqlConnection(Connection))
+            using (SqlConnection connection = new SqlConnection(_connection))
             {
-                SqlTransaction transaction = connection.BeginTransaction();
-                using (SqlCommand cmd = new SqlCommand(removestring, connection, transaction))
+                using (SqlCommand cmd = new SqlCommand(removestring, connection))
                 {
                     try
                     {
                         connection.OpenAsync();
                         cmd.Parameters.AddWithValue("@ID", id);
-
-
                         cmd.ExecuteNonQuery();
-                        transaction.Commit();
                         connection.CloseAsync();
                     }
                     catch (SqlException)
@@ -144,7 +148,7 @@ namespace Sql_Mando.Services
 
         public async Task UpdateMovie(string id,Movie movie)
         {
-            using (SqlConnection connection = new SqlConnection(Connection))
+            using (SqlConnection connection = new SqlConnection(_connection))
             {
                 using (SqlCommand cmd = new SqlCommand(updatestring, connection))
                 {
@@ -155,7 +159,7 @@ namespace Sql_Mando.Services
                         cmd.Parameters.AddWithValue("@Type", movie.titleType);
                         cmd.Parameters.AddWithValue("@Title", movie.primaryTitle);
                         cmd.Parameters.AddWithValue("@Orgin", movie.originalTitle);
-                        cmd.Parameters.AddWithValue("@isAdult", movie.isAdult);
+                        cmd.Parameters.AddWithValue("@Adult", movie.isAdult);
                         cmd.Parameters.AddWithValue("@Start", movie.StartYear);
                         cmd.Parameters.AddWithValue("@End", movie.EndYear);
                         cmd.Parameters.AddWithValue("@Run", movie.RunTime);
@@ -175,9 +179,9 @@ namespace Sql_Mando.Services
             }
         }
 
-        public async Task<Movie> FindMovieById(string id)
+        public async Task<Movie?> FindMovieById(string id)
         {
-            using (SqlConnection connection = new SqlConnection(Connection))
+            using (SqlConnection connection = new SqlConnection(_connection))
             {
                 using (SqlCommand command = new SqlCommand(findidmovie, connection))
                 {

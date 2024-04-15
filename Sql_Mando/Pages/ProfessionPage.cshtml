@@ -1,0 +1,28 @@
+﻿@page
+@model Sql_Mando.Pages.ProfessionPageModel
+@{
+}
+
+<a asp-page="AddProfession"> add profession </a>
+
+<table class="table">
+    <thead>
+    <th>
+        profession
+    </th>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Professions)
+        {
+            <tr>
+                <td>
+                    @item.profession
+                </td>
+                <td>
+                    <a asp-page="UpdateProfessions" asp-route-proid="@item.ID"> update Profession </a>
+                    <a asp-page="DeleteProfession" asp-route-proid="@item.ID"> delete Profession </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

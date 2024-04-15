@@ -1,0 +1,23 @@
+﻿@page
+@model Sql_Mando.Pages.AddKnownTitlesModel
+@{
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="@Model.title.nconst" class="form-control"></label>
+                <input asp-for="@Model.title.nconst" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.title.knownTitle" class="form-control"></label>
+                <input asp-for="@Model.title.knownTitle" class="form-control" />
+            </div>
+            <div class="form-group">
+                <a asp-page="MoviePage" class=" btn-btn-primary">Cancel</a>
+                <input type="submit" value="add movie" class="btn-btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

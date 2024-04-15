@@ -4,25 +4,27 @@ using Sql_Mando.Models;
 
 namespace Sql_Mando.Services
 {
-    public class GenreService : ConnectionString, IGenreService
+    public class KnownTitlesService : ConnectionString, IKnownTitlesService
     {
-        string Insertqueary = $"Exec AddGenre(@tconst=@id,@genre=@Genre)";
-        string removestring = $"Exec DeleteGenre(@Tid=@id,@genre=@Genre)";
-        string searchstring = $"select * from FindAllGenre(@ID)";
-        string updatestring = $"Exec UpdateGenre(@id=@ID,@genre=@Genre)";
-        string searchbyid = $"Exec FindGenreByid (@id=@ID)";
+        string Insertqueary = $"Exec Addtitle(@nconst=@id,@title=@knowntitle";
+        string removestring = $"Exec Deletetitle(@nconst=@id,@title=@knowntitle";
+        string searchstring = $"select * from FindAllKnownTitles(@id) ";
+        string updatestring = $"Exec UpdateTitle(@id=@ID,@title=@knowntitle)";
+        string searchbyid = $"Exec FindTitleByid(@id=@ID)";
 
-        public GenreService(IConfiguration configuration) : base(configuration)
+
+        public KnownTitlesService(IConfiguration configuration) : base(configuration)
         {
 
         }
 
-        public GenreService(string connection) : base(connection)
+        public KnownTitlesService(string connection) : base(connection)
         {
 
         }
 
-        public async Task DeleteGenre(Genre genre)
+
+        public async Task DeleteKnownTitles(KnownTitles title)
         {
             using (SqlConnection connection = new SqlConnection(_connection))
             {
@@ -31,8 +33,7 @@ namespace Sql_Mando.Services
                     try
                     {
                         connection.OpenAsync();
-                        cmd.Parameters.AddWithValue("@id",genre.tconst);
-                        cmd.Parameters.AddWithValue("@Genre", genre);
+                        cmd.Parameters.AddWithValue("@id",title.nconst);
                         cmd.ExecuteNonQuery();
                         connection.CloseAsync();
                     }
@@ -49,7 +50,7 @@ namespace Sql_Mando.Services
             }
         }
 
-        public async Task<List<Genre>> GetGenreFromID(string id)
+        public async Task<List<KnownTitles>> GetKnownTitles(string id)
         {
             using (SqlConnection connection = new SqlConnection(_connection))
             {
@@ -58,18 +59,45 @@ namespace Sql_Mando.Services
                     try
                     {
                         await connection.OpenAsync();
-                        cmd.Parameters.AddWithValue("@ID", id);
-                        List<Genre> Genres = new List<Genre>();
+                        cmd.Parameters.AddWithValue("@id", id);
+                        List<KnownTitles> titles= new List<KnownTitles>();
                         SqlDataReader reader = await cmd.ExecuteReaderAsync();
                         while (await reader.ReadAsync())
                         {
-                            int genreid = reader.GetInt32(0);
+                            long titleid = reader.GetInt64(0);
                             string nconst = reader.GetString(1);
-                            string pro = reader.GetString(2);
-                            Genres.Add(new Genre {Index=genreid, tconst = nconst, genre = pro });
+                            string title = reader.GetString(2);
+                            titles.Add(new KnownTitles { ID=titleid, nconst = nconst, knownTitle = title });
                         }
                         await connection.CloseAsync();
-                        return Genres;
+                        return titles;
+                    }
+                    catch (SqlException)
+                    {
+                        Console.WriteLine(cmd.CommandText);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+
+            }
+            return null;
+        }
+
+
+        public Task<KnownTitles> UpdateTitles(KnownTitles title)
+        {
+            using (SqlConnection connection = new SqlConnection(_connection))
+            {
+                using (SqlCommand cmd = new SqlCommand(updatestring, connection))
+                {
+                    try
+                    {
+                        connection.OpenAsync();
+                        cmd.Parameters.AddWithValue("@ID", title.ID);
+                        cmd.Parameters.AddWithValue("@knowntitle", title);
                         cmd.ExecuteNonQuery();
                         connection.CloseAsync();
                     }
@@ -87,17 +115,17 @@ namespace Sql_Mando.Services
             return null;
         }
 
-        public async Task UpdateGenre(int id,Genre genre)
+        public Task AddTitles(string id, KnownTitles title)
         {
             using (SqlConnection connection = new SqlConnection(_connection))
             {
-                using (SqlCommand cmd = new SqlCommand(updatestring, connection))
+                using (SqlCommand cmd = new SqlCommand(Insertqueary, connection))
                 {
                     try
                     {
                         connection.OpenAsync();
-                        cmd.Parameters.AddWithValue("@ID",genre.Index);
-                        cmd.Parameters.AddWithValue("@Genre", genre);
+                        cmd.Parameters.AddWithValue("@knowntitle", title.knownTitle);
+                        cmd.Parameters.AddWithValue("@ID", id);
                         cmd.ExecuteNonQuery();
                         connection.CloseAsync();
                     }
@@ -112,37 +140,10 @@ namespace Sql_Mando.Services
                 }
 
             }
+            return null;
         }
 
-        public async Task AddGenre(Genre genre)
-        {
-            using (SqlConnection connection = new SqlConnection(_connection))
-            {
-                using (SqlCommand cmd = new SqlCommand(Insertqueary, connection))
-                {
-                    try
-                    {
-                        await connection.OpenAsync();
-                        cmd.Parameters.AddWithValue("@id", genre.tconst);
-                        cmd.Parameters.AddWithValue("@Genre", genre.genre);
-                        cmd.ExecuteNonQuery();
-                        await connection.CloseAsync();
-                    }
-                    catch (SqlException)
-                    {
-                        Console.WriteLine(cmd.CommandText);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-
-                }
-
-            }
-        }
-
-        public async Task<Genre> GetGenre(int id)
+        public async Task<KnownTitles> GetKnownTitlesbyid(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connection))
             {
@@ -151,16 +152,18 @@ namespace Sql_Mando.Services
                     try
                     {
                         await connection.OpenAsync();
-                        cmd.Parameters.AddWithValue("@ID", id);
+                        cmd.Parameters.AddWithValue("@id", id);
                         SqlDataReader reader = await cmd.ExecuteReaderAsync();
                         while (await reader.ReadAsync())
                         {
-                            int genreid = reader.GetInt32(0);
+                            long titleid = reader.GetInt64(0);
                             string nconst = reader.GetString(1);
-                            string pro = reader.GetString(2);
-                            return new Genre { Index = genreid, tconst = nconst, genre = pro };
+                            string title = reader.GetString(2);
+                            KnownTitles titles =new KnownTitles { ID = titleid, nconst = nconst, knownTitle = title};
+                            return titles;
                         }
                         await connection.CloseAsync();
+                        
                     }
                     catch (SqlException)
                     {

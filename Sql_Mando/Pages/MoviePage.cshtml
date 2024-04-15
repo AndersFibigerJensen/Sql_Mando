@@ -6,7 +6,7 @@
         <input type="submit" value="Filter" />
     </form>
 
-    <a asp-page="MovieAdd"> add member </a>
+    <a asp-page="MovieAdd"> add Movie </a>
 
     <table class="table">
         <thead>
@@ -21,6 +21,9 @@
             </th>
             <th>
                 endyear
+            </th>
+            <th>
+               isAdult
             </th>
             <th>
                 runtime
@@ -47,10 +50,17 @@
                   <td>
                     @item.isAdult
                   </td>
+                  <td>
                     <td>
-                      <a asp-page="MovieUpdate" asp-route-id="@item.tconst">update </a>
-                      <a asp-page="MovieDelete" asp-route-id="@item.tconst">delete</a>
+                        <a asp-page="MovieUpdate" asp-route-id="@item.tconst">update </a>
+                        <a asp-page="MovieDelete" asp-route-id="@item.tconst">delete</a>
                     </td>
+                  </td>
+                  <td>
+                        <a asp-page="AddGenre" asp-route-movieid="@item.tconst">add genre</a>
+                        <a asp-page="GenrePage" asp-route-itemid="@item.tconst">get genres</a>
+                  </td>
+ 
 
                </tr>
             }

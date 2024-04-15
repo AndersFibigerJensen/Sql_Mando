@@ -5,16 +5,18 @@ using Sql_Mando.Models;
 
 namespace Sql_Mando.Pages
 {
-    public class MovieAddModel : PageModel
+    public class NameAddModel : PageModel
     {
         [BindProperty]
-        public Movie movie { get; set; }
+        public Name name { get; set; }
 
-        private IMovieService _movieservice;
-        public MovieAddModel(IMovieService movieservice)
+        private INameService _nameService; 
+
+        public NameAddModel(INameService nameservice)
         {
-            _movieservice = movieservice;
+            _nameService = nameservice;
         }
+
 
         public void OnGet()
         {
@@ -23,8 +25,8 @@ namespace Sql_Mando.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            _movieservice.InsertMovie(movie);
-            return RedirectToPage("MoviePage");
+            await _nameService.AddName(name);
+            return RedirectToPage("NamePage");
         }
     }
 }

@@ -1,17 +1,23 @@
-﻿namespace Sql_Mando
+﻿namespace Sql_Mando.Services
 {
     public class ConnectionString
     {
-        private string _connection= "server=localhost;database=IMDB;User ID=imdbuser;password=superSecret;TrustServerCertificate=True)";
+        protected string _connection;
 
 
         public IConfiguration Configuration { get; }
 
         public ConnectionString(IConfiguration configuration)
         {
+            _connection = Secret.Connection;
             Configuration = configuration;
         }
-        public string Connection { get { return _connection; } }
+
+        public ConnectionString(string connection)
+        {
+            _connection = connection;
+        }
+
 
 
     }
